@@ -1,0 +1,28 @@
+{
+  "name": "kano-circle-progress",
+  "homepage": "https://github.com/KanoComputing/kano-circle-progress",
+  "authors": [
+    "KanoComputing <paul@kano.me>"
+  ],
+  "description": "Renders a circular progress bar",
+  "main": "index.html",
+  "keywords": [
+    "web-components",
+    "polymer",
+    "kano"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "^1.4.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.1.6"
+  }
+}

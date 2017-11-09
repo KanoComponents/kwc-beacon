@@ -1,0 +1,40 @@
+{
+  "name": "kano-user-badge",
+  "authors": [
+    "KanoComputing <paul@kano.me>"
+  ],
+  "description": "Displays the user avatar and progress",
+  "main": "index.html",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "kano"
+  ],
+  "license": "MIT",
+  "homepage": "https://kanocomputing.github.io/kano-user-badge",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "^1.4.0",
+    "kano-circle-progress": "KanoComputing/kano-circle-progress#^1.0.0"
+  },
+  "devDependencies": {
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.1",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.1.6"
+  },
+  "version": "1.2.1",
+  "_release": "1.2.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.2.1",
+    "commit": "016c4bd3c7e188167b956d4cc8f7a1cebc5f38f5"
+  },
+  "_source": "https://github.com/KanoComputing/kano-user-badge.git",
+  "_target": "^1.2.1",
+  "_originalSource": "KanoComputing/kano-user-badge"
+}

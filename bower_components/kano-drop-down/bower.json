@@ -1,0 +1,31 @@
+{
+  "name": "kano-drop-down",
+  "authors": [
+    "KanoComputing <paul@kano.me>"
+  ],
+  "description": "Simple tooltip style drop down for the kano ecosystem",
+  "main": "index.html",
+  "keywords": [
+    "web-components",
+    "polymer",
+    "kano"
+  ],
+  "license": "MIT",
+  "homepage": "https://kanocomputing.github.io/kano-drop-down",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "^1.4.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.1.6",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.1",
+    "paper-button": "PolymerElements/paper-button#^1.0.12",
+    "paper-styles": "PolymerElements/paper-styles#^1.1.4"
+  }
+}
