@@ -223,18 +223,13 @@
         ],
         ready () {
             this.update = this.update.bind(this);
-            window.addEventListener('resize', this.update);
         },
         attached () {
             this.update();
+            window.addEventListener('resize', this.update);
         },
         detached () {
-            this.update = this.update.bind(this);
             window.removeEventListener('resize', this.update);
-        },
-        hide () {
-            this.style.display = 'none';
-            this.transform(``, this);
         },
         _targetChanged () {
             this.halt = !Boolean(this.target);
