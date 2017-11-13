@@ -8,16 +8,10 @@
         display: block;
         position: fixed;
         top: 0;
-        right: 0;
         left: 0;
-        bottom: 0;
         pointer-events: none;
     }
-    #content {
-        position: fixed;
-    }
     .beacon {
-        position: fixed;
         width: 30px;
         height: 30px;
         border-radius: 50%;
@@ -200,9 +194,9 @@
             Kano.Behaviors.SoundPlayerBehavior
         ],
         properties: {
-            target: {
-                type: Object,
-                observer: 'update'
+            halt: {
+                type: Boolean,
+                value: true
             },
             angle: {
                 type: Number,
@@ -214,26 +208,25 @@
                 value: 0,
                 observer: 'update'
             },
-            ringAnimationCount: {
-                type: Number,
-                value: 0
-            },
             audioPath: {
                 type: String,
                 value: '/ding.mp3'
             },
-            halt: {
-                type: Boolean,
-                value: false
-            }
+            ringAnimationCount: {
+                type: Number,
+                value: 0
+            },
+            target: Object
         },
+        observers: [
+            '_targetChanged(target.*)'
+        ],
         ready () {
             this.update = this.update.bind(this);
             window.addEventListener('resize', this.update);
         },
         attached () {
             this.update();
-            this.beacon = this.$.content;
         },
         detached () {
             this.update = this.update.bind(this);
@@ -241,10 +234,14 @@
         },
         hide () {
             this.style.display = 'none';
-            this.transform(``, this.beacon);
+            this.transform(``, this);
+        },
+        _targetChanged () {
+            this.halt = !Boolean(this.target);
+            this.update();
         },
         update () {
-            if (this.halt || !this.target) {
+            if (this.halt) {
                 this.toggleClass('animate', false, this.$.beacon);
                 this.toggleClass('animate', false, this.$.ring);
                 this.toggleClass('animate', false, this.$.ripple);
@@ -252,32 +249,34 @@
                 this.ringAnimationCount = 0;
                 return;
             }
-
             this.debounce('update', () => {
                 let target;
                 target = 'getBoundingClientRect' in this.target ?
                         this.target.getBoundingClientRect() : this.target;
 
-                let beacon = this.$.content.getBoundingClientRect(),
+                let beacon = this.getBoundingClientRect(),
                     a = (this.angle / 180) * Math.PI,
                     h = target.height,
                     w = target.width,
                     t = target.top,
                     l = target.left,
-                    // Radius of a bounding circle around the target
+                    // Radius of the bounding circle around the target
                     r = 0.5 * (Math.sqrt(Math.pow(h, 2) + Math.pow(w, 2))) - this.offset,
                     x, y
                 
-                x = Math.cos(a) * r + l  + (target.width / 2);
-                y = Math.sin(a) * r + t + (target.height / 2);
-                        
-                x = Math.min(x, l + w - this.offset - beacon.width);
-                y = Math.min(y, t + h - this.offset - beacon.height);
-                
-                x = Math.max(x, l + this.offset);
-                y = Math.max(y, t + this.offset);
+                // Calculate beacon's position on the bounding circle
+                x = Math.cos(a) * r + l  + (target.width / 2) - (beacon.width / 2);
+                y = Math.sin(a) * r + t + (target.height / 2) - (beacon.height / 2);
 
-                this.transform(`translate(${x}px, ${y}px)`, this.beacon);
+                // Limit beacon at target's bottom and right edges
+                x = Math.min(x, l - this.offset - (beacon.width / 2) + w);
+                y = Math.min(y, t - this.offset - (beacon.height / 2) + h);
+                
+                // Limit beacon at target's top and left edges
+                x = Math.max(x, l + this.offset - (beacon.width / 2));
+                y = Math.max(y, t + this.offset - (beacon.height / 2));
+
+                this.transform(`translate(${x}px, ${y}px)`, this);
                 
                 this.toggleClass('animate', true, this.$.beacon);
                 this.toggleClass('animate', true, this.$.ring);
@@ -292,7 +291,6 @@
             this._ringSoundTimeout = setTimeout(() => {
                 this.playSound(this.audioPath);
                 this.ringAnimationCount++;
-                console.log(this.ringAnimationCount)
             }, 4600 * 0.80);
         }
     });
