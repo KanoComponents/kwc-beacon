@@ -10,24 +10,31 @@
         <script src="../../web-component-tester/browser.js"></script>
 
         <link rel="import" href="../kwc-beacon.html">
+
+        <style>
+            #target-box {
+                position: fixed;
+                top: 50px;
+                left: 50px;
+                width: 200px;
+                height: 200px;
+            }
+            kwc-beacon {
+                z-index: 200;
+            }
+        </style>
     </head>
     <body>
+        <div id="target-box"></div>
         <test-fixture id="basic">
             <template>
-                <kwc-beacon></kwc-beacon>
+                <kwc-beacon id="beacon"></kwc-beacon>
             </template>
         </test-fixture>
 
         <script>
             suite('kwc-product-card', function() {
-                var basic,
-                    populated,
-                    features = [
-                        'The ultimate creative computer',
-                        'Computer Kit + Screen Kit',
-                        '100s of coding challenges',
-                        'Learn how screens work'
-                    ];
+                var basic;
                 setup(function () {
                     basic = fixture('basic');
                 });
@@ -39,74 +46,69 @@
                     assert.equal(basic.angle, 0);
                     assert.equal(basic.offset, 0);
                     assert.equal(basic.ringAnimationCount, 0);
-                    assert.equal(basic.halt, false);
+                    assert.equal(basic.halt, true);
                 });
-                test('the beacon should not be visible when element is on halt', function () {
-                    let beaconRect;
+                test('the beacon should not be visible when element is on halt', function (done) {
+                    var target = document.getElementById('target-box'),
+                        targetRect,
+                        beaconRect;
+                    basic.target = target;
                     basic.halt = true;
-                    beaconRect = basic.$.content.getBoundingClientRect();
-                    assert.equal(beaconRect.width, 0);
-                    assert.equal(beaconRect.height, 0);
+                    setTimeout(function () {
+                        targetRect = target.getBoundingClientRect();
+                        beaconRect = basic.getBoundingClientRect();
+                        assert.equal(beaconRect.width, 0);
+                        assert.equal(beaconRect.height, 0);
+                        done();
+                    }, 10);
                 });
-                // test('no features should be rendered when none are provided', function () {
-                //     var listItems =  Polymer.dom(basic.root).querySelectorAll('li');
-                //     assert.lengthOf(listItems, 0);
-                // });
-                // test('the element should have a default color of Kano Orange', function () {
-                //     assert.equal(basic.color, 'kano-orange');
-                // });
-                // test('the link-href should be null by default', function() {
-                //     assert.equal(basic.linkHref, null);
-                // });
-                // test('the target should be "_blank" by default', function() {
-                //     assert.equal(basic.target, '_blank');
-                // });
-                // test('it should have the correct title', function () {
-                //     var titleText = 'Computer Kit',
-                //         title =  Polymer.dom(populated.root).querySelector('h2');
-                //     assert.equal(populated.title, titleText);
-                //     assert.equal(title.textContent, titleText);
-                // });
-                // test('it should have the correct description', function (done) {
-                //     flush(function () {
-                //         var descriptionText = 'A computer that anyone can make and learn to code with',
-                //             description =  Polymer.dom(populated.root).querySelector('p');
-                //         assert.equal(populated.description, descriptionText);
-                //         assert.equal(description.textContent, descriptionText);
-                //         done();
-                //     });
-                // });
-                // test('it should have the correct features', function (done) {
-                //     assert.equal(populated._hasFeatures, true);
-                //     flush(function () {
-                //         var listItems =  Polymer.dom(populated.root).querySelectorAll('li');
-                //         assert.lengthOf(listItems, features.length);
-                //         done();
-                //     });
-                // });
-                // test('it should have the correct link', function () {
-                //     var href = '/store/uk/computer-kit',
-                //         link =  Polymer.dom(populated.root).querySelector('a');
-                //     assert.equal(populated.linkHref, href);
-                //     assert.equal(link.href, window.location.origin + href);
-                // });
-                // test('it should have the correct target', function () {
-                //     var link =  Polymer.dom(populated.root).querySelector('a');
-                //     assert.equal(populated.target, '_self');
-                //     assert.equal(link.target, '_self');
-                // });
-                // test('it should have the correct image', function () {
-                //     var src = 'https://static.kano.me/assets/images/product-page/kano-complete/product/kano-complete.png',
-                //         image =  Polymer.dom(populated.root).querySelector('iron-image');
-                //     assert.equal(populated.imgSrc, src);
-                //     assert.equal(image.src, src);
-                // });
-                // test('it should have the age range', function () {
-                //     var ageRange = 'Ages 6+',
-                //         age =  Polymer.dom(populated.root).querySelector('div.age');
-                //     assert.equal(populated.ageRange, ageRange);
-                //     assert.equal(age.textContent, ageRange);
-                // });
+                test('the beacon\'s coordinates are in the correct range when changing the angle property' , function (done) {
+                    var target = document.getElementById('target-box'),
+                        i = 0,
+                        targetRect,
+                        beaconRect;
+                    basic.target = target;
+                    function reTargetWithRandomAngle () {
+                        basic.angle = Math.floor(Math.random() * 361);
+                        i++;
+                        if (i < 30) {
+                            setTimeout(function () {
+                                targetRect = target.getBoundingClientRect();
+                                beaconRect = basic.getBoundingClientRect();
+                                expect(beaconRect.x).to.not.be.below(Math.floor(targetRect.x - (beaconRect.width / 2)));
+                                expect(beaconRect.x).to.not.be.above(targetRect.x + targetRect.width - (beaconRect.width / 2));
+                                expect(beaconRect.y).to.not.be.below(Math.floor(targetRect.y - (beaconRect.height / 2)));
+                                expect(beaconRect.y).to.not.be.above(targetRect.y + targetRect.height) - (beaconRect.height / 2);
+                                reTargetWithRandomAngle();
+                            }, 10);
+                        } else {
+                            done();
+                        }
+                    }
+                    reTargetWithRandomAngle();
+                });
+                test('the beacon\'s coordinates are in the correct range when changing the offset property' , function (done) {
+                    var target = document.getElementById('target-box'),
+                        i = 0,
+                        targetRect,
+                        beaconRect;
+                    basic.target = target;
+                    function reTargetWithRandomOffset () {
+                        basic.offset = -20 + Math.floor(Math.random() * 41);
+                        i++;
+                        if (i < 30) {
+                            setTimeout(function () {
+                                targetRect = target.getBoundingClientRect();
+                                beaconRect = basic.getBoundingClientRect();
+                                assert.equal(beaconRect.x, targetRect.x + targetRect.width - (beaconRect.width / 2) - basic.offset);
+                                reTargetWithRandomOffset();
+                            }, 10);
+                        } else {
+                            done();
+                        }
+                    }
+                    reTargetWithRandomOffset();
+                });
             });
         </script>
     </body>
