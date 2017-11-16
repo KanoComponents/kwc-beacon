@@ -46,7 +46,7 @@
                     assert.equal(basic.angle, 0);
                     assert.equal(basic.offset, 0);
                     assert.equal(basic.ringAnimationCount, 0);
-                    assert.equal(basic.halt, true);
+                    assert.equal(basic.halt, false);
                 });
                 test('the beacon should not be visible when element is on halt', function (done) {
                     var target = document.getElementById('target-box'),
@@ -56,7 +56,7 @@
                     basic.halt = true;
                     setTimeout(function () {
                         targetRect = target.getBoundingClientRect();
-                        beaconRect = basic.getBoundingClientRect();
+                        beaconRect = basic.$.content.getBoundingClientRect();
                         assert.equal(beaconRect.width, 0);
                         assert.equal(beaconRect.height, 0);
                         done();
@@ -74,7 +74,7 @@
                         if (i < 30) {
                             setTimeout(function () {
                                 targetRect = target.getBoundingClientRect();
-                                beaconRect = basic.getBoundingClientRect();
+                                beaconRect = basic.$.content.getBoundingClientRect();
                                 expect(beaconRect.x).to.not.be.below(Math.floor(targetRect.x - (beaconRect.width / 2)));
                                 expect(beaconRect.x).to.not.be.above(targetRect.x + targetRect.width - (beaconRect.width / 2));
                                 expect(beaconRect.y).to.not.be.below(Math.floor(targetRect.y - (beaconRect.height / 2)));
@@ -99,7 +99,7 @@
                         if (i < 30) {
                             setTimeout(function () {
                                 targetRect = target.getBoundingClientRect();
-                                beaconRect = basic.getBoundingClientRect();
+                                beaconRect = basic.$.content.getBoundingClientRect();
                                 assert.equal(beaconRect.x, targetRect.x + targetRect.width - (beaconRect.width / 2) - basic.offset);
                                 reTargetWithRandomOffset();
                             }, 10);
