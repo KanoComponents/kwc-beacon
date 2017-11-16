@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+        <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+        <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+        <link rel="import" href="../kwc-beacon.html">
+        <custom-style>
+            <style is="custom-style" include="demo-pages-shared-styles">
+                h2 {
+                    padding-bottom: 20px;
+                }
+                :root {
+                    --demo-snippet-demo: {
+                        background-color: rgba(0, 0, 0, 0.1);
+                    }
+                }
+                #target-box {
+                    width: 200px;
+                    height: 200px;
+                    background: black;
+                    margin: 0 auto;
+                }
+                kwc-beacon {
+                    z-index: 200;
+                }
+            </style>
+        </custom-style>
+    </head>
+    <body unresolved>
+        <div class="vertical-section-container centered">
+            <demo-snippet>
+                <template is="dom-bind" id="bind">
+                    <h2>kwc-beacon</h2>
+                    <div id="target-box"></div>
+                    <kwc-beacon id="default-beacon" angle$="[[angle]]" offset$="[[offset]]"></kwc-beacon>
+                    <h6>Angle</h6>
+                    <input type="range" min="0" max="360" step="1" value="{{angle::input}}">
+                    <h6>Offset</h6>
+                    <input type="range" min="-100" max="100" value="{{offset::input}}">
+                    <script>
+                        document.addEventListener('WebComponentsReady', () => {
+                            let bind = document.getElementById('bind'),
+                                defaultBeacon = document.getElementById('default-beacon'),
+                                targetBox = document.getElementById('target-box');
+                            defaultBeacon.target = targetBox;
+                            bind.angle = 0;
+                            bind.offset = 0;
+                        });
+                    </script>
+                </template>
+            </demo-snippet>
+        </div>
+    </body>
+</html>

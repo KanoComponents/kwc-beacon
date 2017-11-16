@@ -1,0 +1,19 @@
+{
+  "name": "kwc-beacon",
+  "description": "A beacon that can point to elements on a page",
+  "main": "kwc-beacon.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.9.0",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "^2.0.0",
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "resolutions": {
+    "iron-flex-layout": "^2.0.0",
+    "webcomponentsjs": "^v1.0.2"
+  }
+}

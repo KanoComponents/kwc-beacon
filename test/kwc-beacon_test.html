@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+        <title>kwc-beacon test</title>
+
+        <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+        <script src="../../web-component-tester/browser.js"></script>
+
+        <link rel="import" href="../kwc-beacon.html">
+
+        <style>
+            #target-box {
+                position: fixed;
+                top: 50px;
+                left: 50px;
+                width: 200px;
+                height: 200px;
+            }
+            kwc-beacon {
+                z-index: 200;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="target-box"></div>
+        <test-fixture id="basic">
+            <template>
+                <kwc-beacon id="beacon"></kwc-beacon>
+            </template>
+        </test-fixture>
+
+        <script>
+            suite('kwc-product-card', function() {
+                var basic;
+                setup(function () {
+                    basic = fixture('basic');
+                });
+                test('instantiating the element works', function () {
+                    assert.equal(basic.is, 'kwc-beacon');
+                });
+                test('the element has expected default values', function () {
+                    assert.equal(basic.target, undefined);
+                    assert.equal(basic.angle, 0);
+                    assert.equal(basic.offset, 0);
+                    assert.equal(basic.ringAnimationCount, 0);
+                    assert.equal(basic.halt, false);
+                });
+                test('the beacon should not be visible when element is on halt', function (done) {
+                    var target = document.getElementById('target-box'),
+                        targetRect,
+                        beaconRect;
+                    basic.target = target;
+                    basic.halt = true;
+                    setTimeout(function () {
+                        targetRect = target.getBoundingClientRect();
+                        beaconRect = basic.$.content.getBoundingClientRect();
+                        assert.equal(beaconRect.width, 0);
+                        assert.equal(beaconRect.height, 0);
+                        done();
+                    }, 10);
+                });
+                test('the beacon\'s coordinates are in the correct range when changing the angle property' , function (done) {
+                    var target = document.getElementById('target-box'),
+                        i = 0,
+                        targetRect,
+                        beaconRect;
+                    basic.target = target;
+                    function reTargetWithRandomAngle () {
+                        basic.angle = Math.floor(Math.random() * 361);
+                        i++;
+                        if (i < 30) {
+                            setTimeout(function () {
+                                targetRect = target.getBoundingClientRect();
+                                beaconRect = basic.$.content.getBoundingClientRect();
+                                expect(beaconRect.x).to.not.be.below(Math.floor(targetRect.x - (beaconRect.width / 2)));
+                                expect(beaconRect.x).to.not.be.above(targetRect.x + targetRect.width - (beaconRect.width / 2));
+                                expect(beaconRect.y).to.not.be.below(Math.floor(targetRect.y - (beaconRect.height / 2)));
+                                expect(beaconRect.y).to.not.be.above(targetRect.y + targetRect.height) - (beaconRect.height / 2);
+                                reTargetWithRandomAngle();
+                            }, 10);
+                        } else {
+                            done();
+                        }
+                    }
+                    reTargetWithRandomAngle();
+                });
+                test('the beacon\'s coordinates are in the correct range when changing the offset property' , function (done) {
+                    var target = document.getElementById('target-box'),
+                        i = 0,
+                        targetRect,
+                        beaconRect;
+                    basic.target = target;
+                    function reTargetWithRandomOffset () {
+                        basic.offset = -20 + Math.floor(Math.random() * 41);
+                        i++;
+                        if (i < 30) {
+                            setTimeout(function () {
+                                targetRect = target.getBoundingClientRect();
+                                beaconRect = basic.$.content.getBoundingClientRect();
+                                assert.equal(beaconRect.x, targetRect.x + targetRect.width - (beaconRect.width / 2) - basic.offset);
+                                reTargetWithRandomOffset();
+                            }, 10);
+                        } else {
+                            done();
+                        }
+                    }
+                    reTargetWithRandomOffset();
+                });
+            });
+        </script>
+    </body>
+</html>
